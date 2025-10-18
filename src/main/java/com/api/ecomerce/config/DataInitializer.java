@@ -9,7 +9,8 @@ import com.api.ecomerce.models.RoleType;
 import com.api.ecomerce.models.User;
 import com.api.ecomerce.repositories.RoleRepository;
 import com.api.ecomerce.repositories.UserRepository;
-import com.api.ecomerce.services.RoleService;
+
+import org.springframework.beans.factory.annotation.Value;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,42 +18,42 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class DataInitializer implements CommandLineRunner {
 
-    private final RoleService roleService;
-    private final RoleRepository roleRepository;
+    @Value("${admin.firstName}")
+    private String adminFirstName;
+
+    @Value("${admin.lastName}")
+    private String adminLastName;
+
+    @Value("${admin.email}")
+    private String adminEmail;
+
+    @Value("${admin.password}")
+    private String adminPassword;
+
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
     public void run(String... args) throws Exception {
-        initRoles();
         initAdminUser();
     }
 
-    private void initRoles() {
-        for (RoleType roleType : RoleType.values()) {
-            if (!roleRepository.existsByName(roleType.getName())) {
-                roleService.createRole(roleType);
-                System.out.println("Created " + roleType.getName() + " role");
-            }
-        }
-
-        System.out.println("Role initialization completed!");
-    }
-
     private void initAdminUser() {
-        if (userRepository.findByEmail("admin@ecommerce.com").isPresent()) {
+        if (userRepository.findByEmail(adminEmail).isPresent()) {
             System.out.println("Admin user already exists");
             return;
         }
 
-        Role adminRole = roleRepository.findByName(RoleType.ADMIN.getName())
+        Role adminRole = roleRepository
+                .findByName(RoleType.ADMIN.getName())
                 .orElseThrow(() -> new RuntimeException("ADMIN role not found"));
 
         User adminUser = User.builder()
-                .firstName("Admin")
-                .lastName("User")
-                .email("admin@ecommerce.com")
-                .password(passwordEncoder.encode("admin123"))
+                .firstName(adminFirstName)
+                .lastName(adminLastName)
+                .email(adminEmail)
+                .password(passwordEncoder.encode(adminPassword))
                 .role(adminRole)
                 .isAdmin(true)
                 .build();

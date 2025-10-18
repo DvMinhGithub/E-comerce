@@ -19,3 +19,8 @@ logging:
 jwt:
   secret: c2VjcmV0S2V5Rm9ySldUU2lnbmluZ1B1cnBvc2VzT25seQ==
   expiration: 86400000
+admin:
+  firstName: Admin
+  lastName: User
+  email: admin@ecommerce.com
+  password: admin123
