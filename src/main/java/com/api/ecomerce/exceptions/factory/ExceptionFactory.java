@@ -25,6 +25,12 @@ public final class ExceptionFactory {
                 String.format("%s not found with %s: '%s'", resourceName, fieldName, fieldValue));
     }
 
+    public static GenericException conflict(String resourceName, String fieldName, Object fieldValue) {
+        return new GenericException(
+                ErrorCode.CONFLICT,
+                String.format("%s with %s: '%s' already exists", resourceName, fieldName, fieldValue));
+    }
+
     // ==================== BUSINESS ====================
     public static GenericException insufficientStock(String productName, int available, int requested) {
         return new GenericException(

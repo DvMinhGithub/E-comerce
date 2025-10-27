@@ -13,6 +13,7 @@ public enum ErrorCode {
 
     // Resource errors
     RESOURCE_NOT_FOUND("RES_001", "Resource not found.", 404),
+    CONFLICT("RES_002", "Resource already exists.", 409),
 
     // Business logic errors
     INSUFFICIENT_STOCK("BIZ_001", "Insufficient stock.", 400),
