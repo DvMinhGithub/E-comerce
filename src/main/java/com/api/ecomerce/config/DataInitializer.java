@@ -1,5 +1,6 @@
 package com.api.ecomerce.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -9,8 +10,6 @@ import com.api.ecomerce.models.RoleType;
 import com.api.ecomerce.models.User;
 import com.api.ecomerce.repositories.RoleRepository;
 import com.api.ecomerce.repositories.UserRepository;
-
-import org.springframework.beans.factory.annotation.Value;
 
 import lombok.RequiredArgsConstructor;
 

@@ -1,8 +1,8 @@
 package com.api.ecomerce.dtos.response;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AllArgsConstructor;
@@ -24,8 +24,7 @@ public class ApiResponse<T> {
     private T data;
 
     @Builder.Default
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime timestamp = LocalDateTime.now();
+    private String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
     public static <T> ApiResponse<T> create(int status, String message, T data) {
         return ApiResponse.<T>builder()
