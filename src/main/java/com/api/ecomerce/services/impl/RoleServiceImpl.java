@@ -2,7 +2,7 @@ package com.api.ecomerce.services.impl;
 
 import org.springframework.stereotype.Service;
 
-import com.api.ecomerce.exceptions.factory.ExceptionFactory;
+import com.api.ecomerce.exceptions.ExceptionFactory;
 import com.api.ecomerce.models.Role;
 import com.api.ecomerce.models.RoleType;
 import com.api.ecomerce.repositories.RoleRepository;

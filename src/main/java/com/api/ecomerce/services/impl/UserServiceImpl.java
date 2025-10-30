@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.api.ecomerce.dtos.request.UpdateProfileRequest;
 import com.api.ecomerce.dtos.response.ProfileResponse;
-import com.api.ecomerce.exceptions.factory.ExceptionFactory;
+import com.api.ecomerce.exceptions.ExceptionFactory;
 import com.api.ecomerce.mappers.UserMapper;
 import com.api.ecomerce.models.User;
 import com.api.ecomerce.repositories.UserRepository;
@@ -35,14 +35,19 @@ public class UserServiceImpl implements UserService {
     public ProfileResponse updateUserProfile(UpdateProfileRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Long userId = ((User) authentication.getPrincipal()).getId();
-        User existingUser = userRepository
-                .findByEmail(request.getEmail())
-                .orElseThrow(() -> ExceptionFactory.resourceNotFound("User", "email", request.getEmail()));
-        if (existingUser.getId() != userId) {
-            throw ExceptionFactory.conflict("User", "email", request.getEmail());
+
+        User user = userRepository
+                .findById(userId)
+                .orElseThrow(() -> ExceptionFactory.resourceNotFound("User", "id", userId));
+
+        if (!user.getEmail().equals(request.getEmail())) {
+            userRepository.findByEmail(request.getEmail()).ifPresent(existingUser -> {
+                throw ExceptionFactory.conflict("User", "email", request.getEmail());
+            });
         }
-        userMapper.updateUserFromRequest(existingUser, request);
-        User savedUser = userRepository.save(existingUser);
+
+        userMapper.updateUserFromRequest(user, request);
+        User savedUser = userRepository.save(user);
         return userMapper.toProfileResponse(savedUser);
     }
 }

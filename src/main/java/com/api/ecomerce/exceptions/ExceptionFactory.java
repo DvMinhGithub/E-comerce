@@ -1,8 +1,9 @@
-package com.api.ecomerce.exceptions.factory;
+package com.api.ecomerce.exceptions;
 
-import com.api.ecomerce.exceptions.ErrorCode;
-import com.api.ecomerce.exceptions.GenericException;
-
+/**
+ * Factory class for creating exceptions with consistent error messages.
+ * All exception messages are defined here for easy maintenance.
+ */
 public final class ExceptionFactory {
 
     private ExceptionFactory() {
@@ -10,15 +11,13 @@ public final class ExceptionFactory {
     }
 
     // ==================== AUTHENTICATION ====================
-    public static GenericException duplicateEmail(String email) {
-        return new GenericException(ErrorCode.DUPLICATE_EMAIL, email);
-    }
 
     public static GenericException invalidCredentials() {
-        return new GenericException(ErrorCode.INVALID_CREDENTIALS);
+        return new GenericException(ErrorCode.INVALID_CREDENTIALS, "Invalid email or password.");
     }
 
     // ==================== RESOURCE ====================
+
     public static GenericException resourceNotFound(String resourceName, String fieldName, Object fieldValue) {
         return new GenericException(
                 ErrorCode.RESOURCE_NOT_FOUND,
@@ -31,7 +30,8 @@ public final class ExceptionFactory {
                 String.format("%s with %s: '%s' already exists", resourceName, fieldName, fieldValue));
     }
 
-    // ==================== BUSINESS ====================
+    // ==================== BUSINESS LOGIC ====================
+
     public static GenericException insufficientStock(String productName, int available, int requested) {
         return new GenericException(
                 ErrorCode.INSUFFICIENT_STOCK,
@@ -41,11 +41,19 @@ public final class ExceptionFactory {
     }
 
     // ==================== PERMISSION ====================
+
     public static GenericException accessDenied() {
-        return new GenericException(ErrorCode.ACCESS_DENIED);
+        return new GenericException(ErrorCode.ACCESS_DENIED, "Access denied.");
     }
 
     public static GenericException adminRequired() {
-        return new GenericException(ErrorCode.ADMIN_REQUIRED);
+        return new GenericException(ErrorCode.ADMIN_REQUIRED, "Admin privileges required.");
+    }
+
+    // ==================== SYSTEM ====================
+
+    public static GenericException internalServerError() {
+        return new GenericException(
+                ErrorCode.INTERNAL_SERVER_ERROR, "An unexpected error occurred. Please try again later.");
     }
 }

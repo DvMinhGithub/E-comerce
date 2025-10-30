@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import com.api.ecomerce.dtos.request.LoginRequest;
 import com.api.ecomerce.dtos.request.RegisterRequest;
 import com.api.ecomerce.dtos.response.AuthResponse;
-import com.api.ecomerce.exceptions.factory.ExceptionFactory;
+import com.api.ecomerce.exceptions.ExceptionFactory;
 import com.api.ecomerce.models.Role;
 import com.api.ecomerce.models.RoleType;
 import com.api.ecomerce.models.User;
@@ -32,7 +32,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw ExceptionFactory.duplicateEmail(request.getEmail());
+            throw ExceptionFactory.conflict("User", "email", request.getEmail());
         }
 
         Role userRole = roleService.getRoleByName(RoleType.USER);
@@ -54,11 +54,15 @@ public class AuthServiceImpl implements AuthService {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-            User user = userRepository.findByEmail(request.getEmail()).orElseThrow();
-            String jwtToken = jwtService.generateToken(user);
-            return AuthResponse.builder().token(jwtToken).build();
         } catch (Exception e) {
             throw ExceptionFactory.invalidCredentials();
         }
+
+        User user = userRepository
+                .findByEmail(request.getEmail())
+                .orElseThrow(() -> ExceptionFactory.resourceNotFound("User", "email", request.getEmail()));
+
+        String jwtToken = jwtService.generateToken(user);
+        return AuthResponse.builder().token(jwtToken).build();
     }
 }

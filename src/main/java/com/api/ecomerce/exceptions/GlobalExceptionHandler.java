@@ -23,8 +23,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(GenericException.class)
     public ResponseEntity<ApiResponse<String>> handleGenericException(GenericException ex, WebRequest request) {
         log.error("GenericException: {}", ex.getMessage());
-        ApiResponse<String> errorResponse = ApiResponse.create(
-                ex.getErrorCode().getHttpStatus(), ex.getErrorCode().getMessage());
+        ApiResponse<String> errorResponse = ApiResponse.create(ex.getErrorCode().getHttpStatus(), ex.getMessage());
         return new ResponseEntity<>(
                 errorResponse, HttpStatus.valueOf(ex.getErrorCode().getHttpStatus()));
     }
