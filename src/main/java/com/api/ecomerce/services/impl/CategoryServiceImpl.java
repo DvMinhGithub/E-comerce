@@ -58,7 +58,7 @@ public class CategoryServiceImpl implements CategoryService {
             throw ExceptionFactory.conflict("Category", "name", request.getName());
         }
 
-        category.setName(request.getName());
+        categoryMapper.updateEntityFromRequest(category, request);
         Category updatedCategory = categoryRepository.save(category);
         return categoryMapper.toResponse(updatedCategory);
     }

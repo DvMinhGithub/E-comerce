@@ -17,4 +17,3 @@ public interface BrandRepository extends JpaRepository<Brand, Long> {
 
     List<Brand> findByIsActiveTrueOrderByNameAsc();
 }
-

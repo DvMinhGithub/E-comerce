@@ -17,8 +17,6 @@ public class BrandResponse {
 
     private Long id;
     private String name;
-    private Boolean isActive;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
-

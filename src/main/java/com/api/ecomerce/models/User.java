@@ -1,7 +1,8 @@
 package com.api.ecomerce.models;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -21,42 +22,85 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "users")
+@Table(
+        name = "users",
+        indexes = {
+            @Index(name = "idx_users_email", columnList = "email"),
+            @Index(name = "idx_users_is_admin", columnList = "is_admin")
+        })
 public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "first_name", nullable = false, length = 100)
     private String firstName;
 
+    @Column(name = "middle_name", length = 100)
     private String middleName;
 
+    @Column(name = "last_name", nullable = false, length = 100)
     private String lastName;
 
     @Builder.Default
+    @Column(name = "authenticated", nullable = false)
     private boolean authenticated = false;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "email", nullable = false, unique = true, length = 255)
     private String email;
 
-    @Column(nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
-    private Date dob;
+    @Column(name = "date_of_birth")
+    private LocalDate dateOfBirth;
 
-    // private List<ObjectId> orders;
-
-    // private List<ObjectId> wishLists;
-
+    @Column(name = "is_admin", nullable = false)
     @Builder.Default
     private Boolean isAdmin = false;
 
-    // private ObjectId shippingAddress;
-
+    @Column(name = "avatar_url", columnDefinition = "TEXT")
     private String avatarUrl;
 
     private String avatarId;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "shipping_address_id")
+    private ShippingAddress shippingAddress;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Order> orders;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Cart> carts;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ShippingAddress> shippingAddresses;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FeedbackAndReport> feedbackAndReports;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        LocalDateTime now = LocalDateTime.now();
+        createdAt = now;
+        updatedAt = now;
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id", nullable = false)

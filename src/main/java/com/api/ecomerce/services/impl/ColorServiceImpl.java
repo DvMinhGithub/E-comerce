@@ -59,8 +59,7 @@ public class ColorServiceImpl implements ColorService {
         if (colorRepository.existsByNameAndIdNot(normalizedName, id)) {
             throw ExceptionFactory.conflict("Color", "name", request.getName());
         }
-
-        color.setName(normalizedName);
+        colorMapper.updateEntityFromRequest(color, request);
         Color updatedColor = colorRepository.save(color);
         return colorMapper.toResponse(updatedColor);
     }

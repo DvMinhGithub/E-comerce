@@ -25,15 +25,11 @@ public class BrandServiceImpl implements BrandService {
 
     @Override
     public BrandResponse createBrand(CreateBrandRequest request) {
-        String normalizedName = request.getName().toLowerCase();
-
-        if (brandRepository.existsByName(normalizedName)) {
+        if (brandRepository.existsByName(request.getName())) {
             throw ExceptionFactory.conflict("Brand", "name", request.getName());
         }
 
-        Brand brand = brandMapper.toEntity(request);
-        brand.setName(normalizedName);
-        Brand savedBrand = brandRepository.save(brand);
+        Brand savedBrand = brandRepository.save(brandMapper.toEntity(request));
         return brandMapper.toResponse(savedBrand);
     }
 
@@ -45,33 +41,31 @@ public class BrandServiceImpl implements BrandService {
 
     @Override
     public BrandResponse getBrandById(Long id) {
-        Brand brand = brandRepository.findById(id)
-                .orElseThrow(() -> ExceptionFactory.resourceNotFound("Brand", "id", id));
+        Brand brand =
+                brandRepository.findById(id).orElseThrow(() -> ExceptionFactory.resourceNotFound("Brand", "id", id));
         return brandMapper.toResponse(brand);
     }
 
     @Override
     public BrandResponse updateBrand(Long id, UpdateBrandRequest request) {
-        Brand brand = brandRepository.findById(id)
-                .orElseThrow(() -> ExceptionFactory.resourceNotFound("Brand", "id", id));
+        Brand brand =
+                brandRepository.findById(id).orElseThrow(() -> ExceptionFactory.resourceNotFound("Brand", "id", id));
 
-        String normalizedName = request.getName().toLowerCase();
-
-        if (brandRepository.existsByNameAndIdNot(normalizedName, id)) {
+        if (brandRepository.existsByNameAndIdNot(request.getName(), id)) {
             throw ExceptionFactory.conflict("Brand", "name", request.getName());
         }
 
-        brand.setName(normalizedName);
+        brandMapper.updateEntityFromRequest(brand, request);
+
         Brand updatedBrand = brandRepository.save(brand);
         return brandMapper.toResponse(updatedBrand);
     }
 
     @Override
     public void deleteBrand(Long id) {
-        Brand brand = brandRepository.findById(id)
-                .orElseThrow(() -> ExceptionFactory.resourceNotFound("Brand", "id", id));
+        Brand brand =
+                brandRepository.findById(id).orElseThrow(() -> ExceptionFactory.resourceNotFound("Brand", "id", id));
 
         brandRepository.delete(brand);
     }
 }
-

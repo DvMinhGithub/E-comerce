@@ -1,7 +1,6 @@
 package com.api.ecomerce.models;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,34 +10,39 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(
-        name = "colors",
-        indexes = {
-            @Index(name = "idx_colors_name", columnList = "name"),
-            @Index(name = "idx_colors_user_id", columnList = "user_id")
-        })
+        name = "shipping_addresses",
+        indexes = {@Index(name = "idx_shipping_addresses_user_id", columnList = "user_id")})
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Color {
+public class ShippingAddress {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", nullable = false, unique = true, length = 50)
-    private String name;
-
-    @Column(name = "is_active", nullable = false)
-    @Builder.Default
-    private Boolean isActive = true;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToMany(mappedBy = "colors")
-    private List<Product> products;
+    @Column(name = "address", columnDefinition = "TEXT")
+    private String address;
+
+    @Column(name = "city", length = 100)
+    private String city;
+
+    @Column(name = "postal_code", length = 20)
+    private String postalCode;
+
+    @Column(name = "province", length = 100)
+    private String province;
+
+    @Column(name = "country", length = 100)
+    private String country;
+
+    @Column(name = "phone", length = 20)
+    private String phone;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

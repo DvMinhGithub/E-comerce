@@ -1,20 +1,22 @@
 package com.api.ecomerce.mappers;
 
+import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.ReportingPolicy;
 
 import com.api.ecomerce.dtos.request.CreateColorRequest;
+import com.api.ecomerce.dtos.request.UpdateColorRequest;
 import com.api.ecomerce.dtos.response.ColorResponse;
 import com.api.ecomerce.models.Color;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface ColorMapper {
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "isActive", constant = "true")
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
+    @BeanMapping(ignoreByDefault = true)
     Color toEntity(CreateColorRequest request);
 
     ColorResponse toResponse(Color color);
+
+    void updateEntityFromRequest(@MappingTarget Color color, UpdateColorRequest request);
 }

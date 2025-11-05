@@ -1,9 +1,10 @@
 package com.api.ecomerce.models;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,34 +12,33 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(
-        name = "colors",
+        name = "feedback_and_reports",
         indexes = {
-            @Index(name = "idx_colors_name", columnList = "name"),
-            @Index(name = "idx_colors_user_id", columnList = "user_id")
+            @Index(name = "idx_feedback_user_id", columnList = "user_id"),
+            @Index(name = "idx_feedback_created_at", columnList = "created_at")
         })
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Color {
+public class FeedbackAndReport {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", nullable = false, unique = true, length = 50)
-    private String name;
-
-    @Column(name = "is_active", nullable = false)
-    @Builder.Default
-    private Boolean isActive = true;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @NotNull(message = "User is required")
     private User user;
 
-    @ManyToMany(mappedBy = "colors")
-    private List<Product> products;
+    @Column(name = "title", nullable = false, length = 255)
+    @NotBlank(message = "Title is required")
+    private String title;
+
+    @Column(name = "message", nullable = false, columnDefinition = "TEXT")
+    @NotBlank(message = "Message is required")
+    private String message;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

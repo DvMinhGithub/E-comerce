@@ -2,6 +2,7 @@ package com.api.ecomerce.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -28,13 +29,29 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers("/users/profile")
                         .authenticated()
-                        .requestMatchers("GET", "/categories/**", "/colors/**", "/brands/**")
+                        .requestMatchers(HttpMethod.GET, "/categories/**")
                         .permitAll()
-                        .requestMatchers("POST", "/categories/**", "/colors/**", "/brands/**")
+                        .requestMatchers(HttpMethod.GET, "/colors/**")
+                        .permitAll()
+                        .requestMatchers(HttpMethod.GET, "/brands/**")
+                        .permitAll()
+                        .requestMatchers(HttpMethod.POST, "/categories/**")
                         .hasRole("ADMIN")
-                        .requestMatchers("PUT", "/categories/**", "/colors/**", "/brands/**")
+                        .requestMatchers(HttpMethod.POST, "/colors/**")
                         .hasRole("ADMIN")
-                        .requestMatchers("DELETE", "/categories/**", "/colors/**", "/brands/**")
+                        .requestMatchers(HttpMethod.POST, "/brands/**")
+                        .hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/categories/**")
+                        .hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/colors/**")
+                        .hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/brands/**")
+                        .hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/categories/**")
+                        .hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/colors/**")
+                        .hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/brands/**")
                         .hasRole("ADMIN")
                         .anyRequest()
                         .authenticated())

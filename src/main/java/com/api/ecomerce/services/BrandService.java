@@ -18,4 +18,3 @@ public interface BrandService {
 
     void deleteBrand(Long id);
 }
-

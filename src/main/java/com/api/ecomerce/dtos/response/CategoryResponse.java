@@ -18,7 +18,6 @@ public class CategoryResponse {
     private Long id;
     private String name;
     private String imageUrl;
-    private Boolean isActive;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
