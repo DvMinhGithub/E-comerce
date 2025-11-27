@@ -1,7 +1,6 @@
 package com.api.ecomerce.dtos.response;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Set;
 
 import lombok.AllArgsConstructor;
@@ -20,7 +19,7 @@ public class ProductResponse {
     private Long id;
     private String name;
     private String description;
-    private String brand;
+    private BrandResponse brand;
     private CategoryResponse category;
     private Set<String> sizes;
     private Set<ColorResponse> colors;
@@ -32,6 +31,4 @@ public class ProductResponse {
     private Long userId;
     private Integer totalReviews;
     private Double averageRating;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 }

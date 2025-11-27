@@ -1,7 +1,5 @@
 package com.api.ecomerce.dtos.response;
 
-import java.time.LocalDateTime;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,6 +15,4 @@ public class BrandResponse {
 
     private Long id;
     private String name;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 }

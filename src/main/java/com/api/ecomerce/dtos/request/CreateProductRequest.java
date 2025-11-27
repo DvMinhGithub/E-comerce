@@ -30,8 +30,8 @@ public class CreateProductRequest {
     @NotBlank(message = "Product description is required")
     private String description;
 
-    @NotBlank(message = "Brand name is required")
-    private String brand;
+    @NotNull(message = "Brand ID is required")
+    private Long brandId;
 
     @NotNull(message = "Category ID is required")
     private Long categoryId;

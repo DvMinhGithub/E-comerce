@@ -1,5 +1,6 @@
 package com.api.ecomerce.exceptions;
 
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -65,6 +66,28 @@ public class GlobalExceptionHandler {
         ApiResponse<String> errorResponse = ApiResponse.create(HttpStatus.UNAUTHORIZED.value(), errorMessage);
 
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiResponse<String>> handleIllegalArgumentException(
+            IllegalArgumentException ex, WebRequest request) {
+        log.error("IllegalArgumentException: {}", ex.getMessage());
+        ApiResponse<String> errorResponse = ApiResponse.create(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidDataAccessApiUsageException.class)
+    public ResponseEntity<ApiResponse<String>> handleInvalidDataAccessApiUsageException(
+            InvalidDataAccessApiUsageException ex, WebRequest request) {
+        log.error("InvalidDataAccessApiUsageException: {}", ex.getMessage());
+
+        String errorMessage = ex.getMessage();
+        if (ex.getCause() != null && ex.getCause().getMessage() != null) {
+            errorMessage = ex.getCause().getMessage();
+        }
+
+        ApiResponse<String> errorResponse = ApiResponse.create(HttpStatus.BAD_REQUEST.value(), errorMessage);
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)

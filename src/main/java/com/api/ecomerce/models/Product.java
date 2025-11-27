@@ -16,18 +16,20 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(
         name = "products",
         indexes = {
             @Index(name = "idx_products_name", columnList = "name"),
-            @Index(name = "idx_products_brand", columnList = "brand"),
+            @Index(name = "idx_products_brand_id", columnList = "brand_id"),
             @Index(name = "idx_products_category_id", columnList = "category_id"),
             @Index(name = "idx_products_user_id", columnList = "user_id"),
             @Index(name = "idx_products_price", columnList = "price")
         })
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -45,9 +47,10 @@ public class Product {
     @NotBlank(message = "Product description is required")
     private String description;
 
-    @Column(name = "brand", nullable = false, length = 255)
-    @NotBlank(message = "Brand is required")
-    private String brand;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "brand_id", nullable = false)
+    @NotNull(message = "Brand is required")
+    private Brand brand;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)

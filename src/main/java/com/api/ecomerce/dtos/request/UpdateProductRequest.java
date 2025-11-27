@@ -25,7 +25,7 @@ public class UpdateProductRequest {
 
     private String description;
 
-    private String brand;
+    private Long brandId;
 
     private Long categoryId;
 

@@ -12,8 +12,10 @@ import com.api.ecomerce.dtos.response.ProductResponse;
 import com.api.ecomerce.models.Product;
 import com.api.ecomerce.models.Review;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = { CategoryMapper.class,
-        ColorMapper.class, ProductImageMapper.class })
+@Mapper(
+        componentModel = "spring",
+        unmappedTargetPolicy = ReportingPolicy.IGNORE,
+        uses = {CategoryMapper.class, ColorMapper.class, ProductImageMapper.class})
 public interface ProductMapper {
 
     @Mapping(target = "userId", source = "user.id")
@@ -25,8 +27,10 @@ public interface ProductMapper {
             response.setQtyLeft(product.getTotalQty() - product.getTotalSold());
             if (product.getReviews() != null) {
                 response.setTotalReviews(product.getReviews().size());
-                response.setAverageRating(
-                        product.getReviews().stream().mapToInt(Review::getRating).average().orElse(0.0));
+                response.setAverageRating(product.getReviews().stream()
+                        .mapToInt(Review::getRating)
+                        .average()
+                        .orElse(0.0));
             } else {
                 response.setTotalReviews(0);
                 response.setAverageRating(0.0);
@@ -38,4 +42,3 @@ public interface ProductMapper {
 
     void updateEntityFromRequest(@MappingTarget Product product, UpdateProductRequest request);
 }
-
